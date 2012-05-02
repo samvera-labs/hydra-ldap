@@ -1,8 +1,8 @@
 require "hydra/ldap/version"
+require "net/ldap"
 
 module Hydra
   module LDAP
-    require 'hydra/ldap/engine' if defined?(Rails)
 
     # Your code goes here...
     class NoUsersError < StandardError; end
@@ -124,3 +124,6 @@ module Hydra
 
   end
 end
+
+require 'hydra/ldap/engine' if defined?(Rails)
+
