@@ -1,7 +1,9 @@
-require "hydra-ldap/version"
+require "hydra/ldap/version"
 
 module Hydra
   module LDAP
+    require 'hydra/ldap/engine' if defined?(Rails)
+
     # Your code goes here...
     class NoUsersError < StandardError; end
     class MissingOwnerError < StandardError; end
@@ -26,7 +28,7 @@ module Hydra
     end
 
     def self.ldap_config
-      @ldap_config ||= YAML::load(ERB.new(IO.read(File.join(Rails.root, 'config', 'ldap.yml'))).result)[Rails.env].with_indifferent_access
+      @ldap_config ||= YAML::load(ERB.new(IO.read(File.join(Rails.root, 'config', 'hydra-ldap.yml'))).result)[Rails.env].with_indifferent_access
     end
 
     def self.group_base
