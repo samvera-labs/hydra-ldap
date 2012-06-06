@@ -23,7 +23,12 @@ Create the config file (config/ldap.yml) by running:
 <pre>rails generate hydra-ldap</pre>
 
 
-<pre>Hydra::LDAP.create_group(code, description, owner, users)</pre>
+<pre>Hydra::LDAP.create_group(group_code, description, owner, users)</pre>
+<pre>Hydra::LDAP.groups_for_user(user_id)</pre>
+<pre>Hydra::LDAP.groups_owned_by_user(user_id)</pre>
+<pre>Hydra::LDAP.delete_group(group_code)</pre>
+<pre>Hydra::LDAP.add_users_to_group(group_code, users)</pre>
+<pre>Hydra::LDAP.remove_users_from_group(group_code, users)</pre>
 
 ## Contributing
 
