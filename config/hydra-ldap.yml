@@ -1,0 +1,10 @@
+test:  
+  host: pesto.library.northwestern.edu
+  port: 389
+  username: cn=Manager,dc=library,dc=northwestern,dc=edu
+  password: abba
+  password: <%= ENV['LDAP_PASSWORD'] %>
+  group_base: ou=groups,dc=library,dc=northwestern,dc=edu
+  base: ou=people,dc=northwestern,dc=edu
+  uid: uid
+

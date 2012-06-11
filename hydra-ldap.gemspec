@@ -10,6 +10,9 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency('rails')
   gem.add_dependency('net-ldap')
+
+  gem.add_development_dependency('rake')
+  gem.add_development_dependency('rspec')
   
 
   gem.files         = `git ls-files`.split($\)
