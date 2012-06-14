@@ -8,7 +8,6 @@ Gem::Specification.new do |gem|
   gem.summary       = %q{Create, Read and Update LDAP groups}
   gem.homepage      = "https://github.com/projecthydra/hydra-ldap"
 
-  gem.add_dependency('rails')
   gem.add_dependency('net-ldap')
 
   gem.add_development_dependency('rake')
