@@ -1,0 +1,9 @@
+test:  
+  host: ldap.example.com
+  port: 389
+  username: cn=Manager,dc=example,dc=com
+  password: <%= ENV['LDAP_PASSWORD'] %>
+  group_base: ou=groups,dc=example,dc=com
+  base: ou=people,dc=example,dc=com
+  uid: uid
+
