@@ -3,7 +3,6 @@ require "net/ldap"
 require 'active_support/core_ext/object/blank'
 require 'active_support/core_ext/hash/indifferent_access'
 require 'yaml'
-require 'rails'
 
 module Hydra
   module LDAP
@@ -32,8 +31,8 @@ module Hydra
     end
 
     def self.ldap_config
-      root = Rails.root || '.'
-      env = Rails.env || 'test'
+      root = defined?(Rails) ? Rails.root : '.'
+      env = defined?(Rails) ?  Rails.env : 'test'
       @ldap_config ||= YAML::load(ERB.new(IO.read(File.join(root, 'config', 'hydra-ldap.yml'))).result)[env].with_indifferent_access
     end
 
