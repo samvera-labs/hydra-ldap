@@ -72,7 +72,8 @@ module Hydra
       #result = Hydra::LDAP.connection.search(:base=>group_base, :filter=> Net::LDAP::Filter.construct("(&(objectClass=groupofnames)(member=uid=#{uid}))"), :attributes=>['cn'])
       #result.map{|r| r[:cn].first}
       result = Hydra::LDAP.connection.search(:base=>group_base, :filter=>Net::LDAP::Filter.eq('uid', uid), :attributes=>['psMemberOf'])
-      result.map{|r| r[:psMemberOf].first}
+      # only get umg and strip off the cn
+      result.first[:psmemberof].select{ |y| y.starts_with? 'cn=umg/' }.map{ |x| x.sub(/^cn=/, '') }
     end
 
     def self.groups_owned_by_user(uid)
@@ -141,7 +142,7 @@ module Hydra
     end
 
     def self.does_group_exist?(cn)
-      hits Hydra::LDAP.connection.search(:base=>group_base, :filter=>Net::LDAP::Filter.eq('cn', cn))
+      hits = Hydra::LDAP.connection.search(:base=>group_base, :filter=>Net::LDAP::Filter.eq('cn', cn))
       return hits.count == 1
     end
 
