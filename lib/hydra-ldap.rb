@@ -72,8 +72,8 @@ module Hydra
       #result = Hydra::LDAP.connection.search(:base=>group_base, :filter=> Net::LDAP::Filter.construct("(&(objectClass=groupofnames)(member=uid=#{uid}))"), :attributes=>['cn'])
       #result.map{|r| r[:cn].first}
       result = Hydra::LDAP.connection.search(:base=>group_base, :filter=>Net::LDAP::Filter.eq('uid', uid), :attributes=>['psMemberOf'])
-      # only get umg and strip off the cn
-      result.first[:psmemberof].select{ |y| y.starts_with? 'cn=umg/' }.map{ |x| x.sub(/^cn=/, '') }
+      # only get umg and strip off the cn and the ,dc=psu,dc=edu
+      result.first[:psmemberof].select{ |y| y.starts_with? 'cn=umg/' }.map{ |x| x.sub(/^cn=/, '') }.map{ |z| z.sub(/,dc=psu,dc=edu/, '') }
     end
 
     def self.groups_owned_by_user(uid)
