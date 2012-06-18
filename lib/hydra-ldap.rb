@@ -69,8 +69,10 @@ module Hydra
     # same as
     # ldapsearch -h ec2-107-20-53-121.compute-1.amazonaws.com -p 389 -x -b dc=example,dc=com -D "cn=admin,dc=example,dc=com" -W "(&(objectClass=groupofnames)(member=uid=vanessa))" cn
     def self.groups_for_user(uid)
-      result = Hydra::LDAP.connection.search(:base=>group_base, :filter=> Net::LDAP::Filter.construct("(&(objectClass=groupofnames)(member=uid=#{uid}))"), :attributes=>['cn'])
-      result.map{|r| r[:cn].first}
+      #result = Hydra::LDAP.connection.search(:base=>group_base, :filter=> Net::LDAP::Filter.construct("(&(objectClass=groupofnames)(member=uid=#{uid}))"), :attributes=>['cn'])
+      #result.map{|r| r[:cn].first}
+      result = Hydra::LDAP.connection.search(:base=>group_base, :filter=>Net::LDAP::Filter.eq('uid', uid), :attributes=>['psMemberOf'])
+      result.map{|r| r[:psMemberOf].first}
     end
 
     def self.groups_owned_by_user(uid)
@@ -135,6 +137,11 @@ module Hydra
 
     def self.is_user_unique?(uid)
       hits = Hydra::LDAP.connection.search(:base=>group_base, :filter=>Net::LDAP::Filter.eq('uid', uid))
+      return hits.count == 1
+    end
+
+    def self.does_group_exist?(cn)
+      hits Hydra::LDAP.connection.search(:base=>group_base, :filter=>Net::LDAP::Filter.eq('cn', cn))
       return hits.count == 1
     end
 
