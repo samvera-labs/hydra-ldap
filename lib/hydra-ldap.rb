@@ -138,7 +138,12 @@ module Hydra
         #puts "Val is: #{val}"
         @cache[group_code] = val
       end
-    
+
+      def get_user(uid, attribute=[])
+        result = connection.search(:base=>group_base, :filter => Net::LDAP::Filter.eq('uid', uid), :attributes => attribute)
+        return result
+      end
+
       def does_user_exist?(uid)
         hits = connection.search(:base=>group_base, :filter=>Net::LDAP::Filter.eq('uid', uid))
         return !hits.empty?
