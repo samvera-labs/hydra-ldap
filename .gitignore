@@ -19,3 +19,4 @@ doc/
 
 *.swp
 Gemfile.lock
+.rvmrc

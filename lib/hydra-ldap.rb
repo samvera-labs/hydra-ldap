@@ -7,13 +7,12 @@ require 'rails'
 
 module Hydra
   module LDAP
-      # Your code goes here...
     class NoUsersError < StandardError; end
     class MissingOwnerError < StandardError; end
     class GroupNotFound < StandardError; end
-   
+
     def self.connection
-      @ldap_conn ||= Net::LDAP.new(ldap_connection_config) 
+      @ldap_conn ||= Net::LDAP.new(ldap_connection_config)
     end
 
     def self.ldap_connection_config
@@ -57,11 +56,10 @@ module Hydra
     #  :member=>users.map {|u| "uid=#{u}"},
     #  :owner=>"uid=#{owner}"
     # }
-    def self.create_group(dn, attributes)
-      raise NoUsersError, "Unable to persist a group without users" unless users.present?
-      raise MissingOwnerError, "Unable to persist a group without owner" unless owner
-      #connection.add(:dn=>dn(code), :attributes=>attributes)
-      connection.add(:dn=>dn, :attributes=>attributes)
+    def self.create_group(code, attributes)
+      raise NoUsersError, "Unable to persist a group without users" unless attributes[:member]
+      raise MissingOwnerError, "Unable to persist a group without owner" unless attributes[:owner]
+      connection.add(:dn=>dn(code), :attributes=>attributes)
     end
 
     def self.delete_group(dn)
@@ -73,13 +71,13 @@ module Hydra
     # Northwestern passes attributes=['cn']
     # PSU filter=Net::LDAP::Filter.eq('uid', uid)
     # NW filter=Net::LDAP::Filter.construct("(&(objectClass=groupofnames)(member=uid=#{uid}))"))
-    def self.groups_for_user(filter, attributes=['psMemberOf'], &block) 
+    def self.groups_for_user(filter, attributes=['psMemberOf'], &block)
       result = connection.search(:base=>group_base, :filter => filter, :attributes => attributes)
       block.call(result)
     end
-  
+
     # NW - return result.map{|r| r[:cn].first}
-    def self.groups_owned_by_user(filter, attributes=['cn'], &block) 
+    def self.groups_owned_by_user(filter, attributes=['cn'], &block)
       result = connection.search(:base=>group_base, :filter=> filter, :attributes=>attributes)
       block.call(result)
     end

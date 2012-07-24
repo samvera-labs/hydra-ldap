@@ -1,9 +1,16 @@
 require 'spec_helper'
 
-describe 'Ldap service' do 
+describe 'Ldap service' do
   before do
     # If this line isn't true, there was a problem creating (probably already exists.
-    Hydra::LDAP.create_group('justin1', 'Test Group', 'quentin', ['kacey', 'larry', 'ursula']).should be_true
+    attrs = {
+      :cn => 'justin1',
+      :objectclass => 'groupofnames',
+      :description => 'Test Group',
+      :owner => 'uid=quentin',
+      :member => ['uid=kacey', 'uid=larry', 'uid=ursula']
+    }
+    Hydra::LDAP.create_group('justin1', attrs).should be_true
   end
   after do
     Hydra::LDAP.delete_group('justin1').should be_true
