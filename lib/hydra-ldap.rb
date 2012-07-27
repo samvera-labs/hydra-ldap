@@ -57,13 +57,13 @@ module Hydra
     #  :owner=>"uid=#{owner}"
     # }
     def self.create_group(code, attributes)
-      raise NoUsersError, "Unable to persist a group without users" unless attributes[:member]
-      raise MissingOwnerError, "Unable to persist a group without owner" unless attributes[:owner]
+      raise NoUsersError, "Unable to persist a group without users" unless ldap_config[:group_member] #attributes[:uniquemember]
+      raise MissingOwnerError, "Unable to persist a group without owner" unless ldap_config[:group_owner] #attributes[:owner]
       connection.add(:dn=>dn(code), :attributes=>attributes)
     end
 
-    def self.delete_group(dn)
-      connection.delete(:dn=>dn)
+    def self.delete_group(code)
+      connection.delete(:dn=>dn(code))
     end
 
     # same as
@@ -73,38 +73,47 @@ module Hydra
     # NW filter=Net::LDAP::Filter.construct("(&(objectClass=groupofnames)(member=uid=#{uid}))"))
     def self.groups_for_user(filter, attributes=['psMemberOf'], &block)
       result = connection.search(:base=>group_base, :filter => filter, :attributes => attributes)
-      block.call(result)
+      block.call(result) if block_given?
     end
 
     # NW - return result.map{|r| r[:cn].first}
     def self.groups_owned_by_user(filter, attributes=['cn'], &block)
       result = connection.search(:base=>group_base, :filter=> filter, :attributes=>attributes)
-      block.call(result)
+      block.call(result) if block_given?
     end
 
     # result[:description].first
-    def self.title_of_group(group_code, &block)
-      result = find_group(group_code)
-      block.call(result)
+    def self.title_of_group(group_code, filter, attributes=['description'], &block)
+      if block_given?
+        find_group(group_code, filter, attributes, &block)
+      else 
+        find_group(group_code, filter, attributes)
+      end
     end
 
     # result[:member].map { |v| v.sub(/^uid=/, '') }
-    def self.users_for_group(group_code, &block)
-      result = find_group(group_code)
-      block.call(result)
+    def self.users_for_group(group_code, filter, attributes=['member'], &block)
+      if block_given?
+        find_group(group_code, filter, attributes, &block)
+      else  
+        find_group(group_code, filter, attributes)
+      end
     end
 
     # result[:owner].first.sub(/^uid=/, '')
-    def self.owner_for_group(group_code, &block)
-      result = find_group(group_code)
-      block.call(result)
+    def self.owner_for_group(group_code, filter, attributes=['owner'], &block)
+      if block_given?
+        find_group(group_code, filter, attributes, &block)
+      else  
+        find_group(group_code, filter, attributes)
+      end
     end
 
     def self.add_users_to_group(group_code, users)
       invalidate_cache(group_code)
       ops = []
       users.each do |u|
-        ops << [:add, :member, "uid=#{u}"]
+        ops << [:add, ldap_config[:group_member], "uid=#{u}"]
       end
       connection.modify(:dn=>dn(group_code), :operations=>ops)
     end
@@ -113,7 +122,7 @@ module Hydra
       invalidate_cache(group_code)
       ops = []
       users.each do |u|
-        ops << [:delete, :member, "uid=#{u}"]
+        ops << [:delete, ldap_config[:group_member], "uid=#{u}"]
       end
       connection.modify(:dn=>dn(group_code), :operations=>ops)
     end
@@ -133,25 +142,25 @@ module Hydra
       result = connection.search(:base=>group_base, :filter=> filter, :attributes=>attributes)
       val = {}
       raise GroupNotFound, "Can't find group '#{group_code}' in ldap" unless result.first
-      block.call(result)
+      @cache[[group_code, filter, attributes]] = result 
+      block.call(result) if block_given?
       #puts "Val is: #{val}"
-      @cache[group_code] = val
     end
 
     def self.get_user(filter, attribute=[])
-      result = connection.search(:base=>group_base, :filter => filter, :attributes => attribute)
+      result = connection.search(:base=>treebase, :filter => filter, :attributes => attribute)
       return result
     end
 
     # hits = connection.search(:base=>group_base, :filter=>Net::LDAP::Filter.eq('uid', uid))
     def self.does_user_exist?(filter)
-      hits = connection.search(:base=>group_base, :filter=>filter)
+      hits = connection.search(:base=>treebase, :filter=>filter)
       return !hits.empty?
     end
 
     # hits = connection.search(:base=>group_base, :filter=>Net::LDAP::Filter.eq('uid', uid))
-    def self.is_user_unique?(uid)
-      hits = connection.search(:base=>group_base, :filter=>filter)
+    def self.is_user_unique?(filter)
+      hits = connection.search(:base=>treebase, :filter=>filter)
       return hits.count == 1
     end
 

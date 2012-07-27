@@ -1,10 +1,16 @@
 test:  
-  host: pesto.library.northwestern.edu
-  port: 389
-  username: cn=Manager,dc=library,dc=northwestern,dc=edu
-  password: abba
-  password: <%= ENV['LDAP_PASSWORD'] %>
-  group_base: ou=groups,dc=library,dc=northwestern,dc=edu
-  base: ou=people,dc=northwestern,dc=edu
+  host: localhost 
+  port: 3897
+  group_base: ou=people,dc=example,dc=org 
+  base: ou=people,dc=example,dc=org 
   uid: uid
+
+development:  
+  host: localhost 
+  port: 3897
+  group_base: ou=groups,dc=example,dc=org 
+  base: ou=people,dc=example,dc=org 
+  uid: uid
+  group_member: uniquemember  # attribute name in a group to identify a member
+  group_owner: owner          # attribute name to identify group owner
 
