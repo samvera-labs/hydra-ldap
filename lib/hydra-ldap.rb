@@ -131,20 +131,18 @@ module Hydra
       @cache ||= {}
       @cache[group_code] = nil
     end
-    
+
     # NW result = connection.search(:base=>group_base, :filter=> Net::LDAP::Filter.construct("(&(objectClass=groupofnames)(cn=#{group_code}))"), :attributes=>['member', 'owner', 'description'])
     # result.first.each do |k, v|
     #  val[k] = v
     # end
     def self.find_group(group_code, filter, attributes, &block)
       @cache ||= {}
-      return @cache[group_code] if @cache[group_code]
+      return @cache[[group_code, filter, attributes]] if @cache[[group_code, filter, attributes]]
       result = connection.search(:base=>group_base, :filter=> filter, :attributes=>attributes)
-      val = {}
       raise GroupNotFound, "Can't find group '#{group_code}' in ldap" unless result.first
-      @cache[[group_code, filter, attributes]] = result 
+      @cache[[group_code, filter, attributes]] = result
       block.call(result) if block_given?
-      #puts "Val is: #{val}"
     end
 
     def self.get_user(filter, attribute=[])
