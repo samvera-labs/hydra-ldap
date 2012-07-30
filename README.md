@@ -39,8 +39,8 @@ attrs = {
 Hydra::LDAP.create_group(group_code, attributes{})
 </pre>
 
-Example of how to customize the results being returned, print out the cn attribute for 
-the groups owned by this user, this example should be good for NU.
+Examples of how to customize the results being returned, print out the cn attribute for 
+the groups owned by this user (hoping these are helpful for NU).
 <pre>
 filter = Net::LDAP::Filter.construct("(owner=uid=quentin,ou=people,dc=example,dc=org)")
 Hydra::LDAP.groups_owned_by_user(filter, ['owner', 'cn']){ |result| result.map{ |r| puts r[:cn].first } }
@@ -69,7 +69,7 @@ filter = Net::LDAP::Filter.construct("(cn=#{group_code})")
 Hydra::LDAP.owner_for_group(group_code, filter, ['owner']) { |result| result.first[:owner].map{ |r| r.sub(/^uid=/, '') }}
 </pre>
 
-
+These are all pretty similar to previous calls, if not the same signatures.
 <pre>Hydra::LDAP.delete_group(group_code).should be_true</pre>
 
 
