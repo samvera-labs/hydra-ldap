@@ -1,5 +1,5 @@
 module Hydra
   module LDAP
-    VERSION = "1.0.0"
+    VERSION = "0.0.4"
   end
 end
