@@ -1,7 +1,7 @@
 test:  
   host: localhost 
   port: 3897
-  group_base: ou=people,dc=example,dc=org 
+  group_base: ou=groups,dc=example,dc=org 
   base: ou=people,dc=example,dc=org 
   uid: uid
 
