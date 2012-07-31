@@ -9,11 +9,11 @@ Gem::Specification.new do |gem|
   gem.homepage      = "https://github.com/projecthydra/hydra-ldap"
 
   gem.add_dependency('net-ldap')
-  gem.add_dependency('activesupport')
+  gem.add_dependency('rails')
 
   gem.add_development_dependency('rake')
   gem.add_development_dependency('rspec')
-  
+  gem.add_development_dependency('ladle')
 
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
