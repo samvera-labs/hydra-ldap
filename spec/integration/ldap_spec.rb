@@ -58,7 +58,7 @@ describe 'Ldap service' do
   describe "Managing Groups" do
     before do
       attrs = {
-        :cn => 'PF',
+        :cn => 'PulpFiction',
         :objectclass => 'groupofuniquenames',
         :description => 'Pulp Fiction is a movie by quentin',
         :owner => 'uid=quentin,ou=people,dc=example,dc=org',

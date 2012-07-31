@@ -57,8 +57,8 @@ module Hydra
     #  :owner=>"uid=#{owner}"
     # }
     def self.create_group(code, attributes)
-      raise NoUsersError, "Unable to persist a group without users" unless ldap_config[:group_member] #attributes[:uniquemember]
-      raise MissingOwnerError, "Unable to persist a group without owner" unless ldap_config[:group_owner] #attributes[:owner]
+      raise NoUsersError, "Unable to persist a group without users" unless attributes[:uniquemember] 
+      raise MissingOwnerError, "Unable to persist a group without owner" unless attributes[:owner] 
       connection.add(:dn=>dn(code), :attributes=>attributes)
     end
 
