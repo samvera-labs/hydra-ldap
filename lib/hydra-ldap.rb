@@ -25,6 +25,7 @@ module Hydra
         @ldap_connection_config[:auth]={:method=>:simple}
         @ldap_connection_config[:auth][:username] = yml[:username]
         @ldap_connection_config[:auth][:password] = yml[:password]
+        @ldap_connection_config[:base] = yml[:base]
       end
       @ldap_connection_config
     end

@@ -2,8 +2,13 @@ test:
   host: localhost 
   port: 3897
   group_base: ou=groups,dc=example,dc=org 
-  base: ou=people,dc=example,dc=org 
+  base: ou=people,dc=example,dc=org
   uid: uid
+
+  #Optional attributes
+  #username: admin
+  #password: admin
+  #admin_base: cn=Directory Administrator,dc=example,dc=org
 
 development:  
   host: localhost 
@@ -13,4 +18,9 @@ development:
   uid: uid
   group_member: uniquemember  # attribute name in a group to identify a member
   group_owner: owner          # attribute name to identify group owner
+ 
+  #Optional attributes
+  #username: admin
+  #password: admin
+  #admin_base: cn=Directory Administrator,dc=example,dc=org
 
