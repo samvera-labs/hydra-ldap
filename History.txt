@@ -1,0 +1,3 @@
+0.1.0
+Have the LDAP initialization take into account the YML base setting.
+
