@@ -1,5 +1,8 @@
 # Hydra::LDAP
 
+[![Build Status](https://travis-ci.org/projecthydra-labs/hydra-works.svg?branch=master)](https://travis-ci.org/projecthydra-labs/hydra-works)
+[![Contribution Guidelines](http://img.shields.io/badge/CONTRIBUTING-Guidelines-blue.svg)](./CONTRIBUTING.md)
+
 A gem for managing ldap groups used with hydra
 
 ## Installation
