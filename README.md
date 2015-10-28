@@ -23,7 +23,7 @@ Or install it yourself as:
 
 Create the config file (config/ldap.yml) by running:
 
-<pre>rails generate hydra-ldap</pre>
+<pre>rails generate hydra_ldap:config</pre>
 
 Made the filters, attributes and result parsing all parameters as frequently as possible, to try and make this
 usable to many LDAP directory set ups.
